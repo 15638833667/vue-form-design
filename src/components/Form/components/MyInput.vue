@@ -1,7 +1,7 @@
 <template>
   <el-input
     v-model="formData[item.prop]"
-    :style="item.style?item.style:{width:'100%'}"
+    :style="item.style ? item.style : { width: '100%' }"
     :type="item.type"
     :placeholder="item.placeholder"
     :suffix-icon="item.suffixIcon"
@@ -19,14 +19,14 @@
 </template>
 
 <script>
-import mixins from '../mixins'
+import mixins from "../mixins";
 
 export default {
   components: {},
   mixins: [mixins],
   props: {},
   data() {
-    return {}
+    return {};
   },
   computed: {},
   created() {},
@@ -34,11 +34,11 @@ export default {
   methods: {
     change() {
       this.mixinEvent({
-        type: 'change',
+        type: "change",
         prop: this.item.prop,
-        value: this.formData[this.item.prop]
-      })
-    }
-  }
-}
+        value: this.formData[this.item.prop],
+      });
+    },
+  },
+};
 </script>

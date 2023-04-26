@@ -13,27 +13,32 @@
       @drop="handleDrap"
     >
       <ul class="form-list">
-        <li v-for="(item, index) in formList" :key="item.type + index">
-          <el-button type="primary" size="small"
-            >{{ item.label }}{{ index }}</el-button
-          >
+        <li v-for="(item, index) in formList" :key="item.prop + index">
+          <formRender :item="item" :formData="formData"></formRender>
         </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
+import componentsMap from '../../utils/componentsMap'
+import formRender from '../../components/Form/index.vue';
 export default {
   name: "VisibleAction",
+  components: {
+    formRender
+  },
   data() {
     return {
+      componentsMap,
+      formData: {},
+      formItemList: [],
       formList: [],
       drapItem: {},
       enterStatus: false,
     };
   },
   created() {
-    console.log("created", Math.random());
     this.$EventBus.$on("dragItem", (item) => {
       this.getDrapItem(item);
     });
@@ -43,17 +48,10 @@ export default {
     dragenter(event) {
       event.preventDefault();
       this.enterStatus = true;
-      // console.log("dragenter", { event });
     },
     // 拖拽元素离开
     dragleave(event) {
       // event.preventDefault();
-      console.log(
-        "dragleave",
-        "---------------离开",
-        event.target.tagName,
-        event.target.className
-      );
       if (event.target && event.target.className === "canvas-box") {
         this.enterStatus = false;
       }
@@ -61,10 +59,10 @@ export default {
     // 拖拽元素结束
     handleDrap(event) {
       event.preventDefault();
-      console.log("this.drapItem", this.drapItem.type);
-      // if (Object.keys(this.drapItem).length) {
       if (this.enterStatus) {
-        this.formList.push(this.drapItem);
+        this.formItemList.push(this.drapItem);
+        this.formList.push(this.componentsMap[this.drapItem.type]);
+        console.log(this.formList)
       }
     },
     getDrapItem(item) {
@@ -72,7 +70,6 @@ export default {
     },
   },
   beforeDestroy() {
-    console.log("beforeDestroy", Math.random());
     this.$EventBus.$off("dragItem");
   },
 };
