@@ -12,8 +12,17 @@
       @dragleave="dragleave"
       @drop="handleDrap"
     >
-      <ul class="form-list">
-        <li v-for="(item, index) in $store.state.formList" :key="item.prop + index" @click="configItemInfo(item)">
+      <ul
+        class="form-list"
+        :style="{
+          background: $store.state.formConfig.bgColor,
+        }"
+      >
+        <li
+          v-for="(item, index) in $store.state.formList"
+          :key="item.prop + index"
+          @click="configItemInfo(item)"
+        >
           <formRender :item="item" :formData="formData"></formRender>
         </li>
       </ul>
@@ -21,12 +30,12 @@
   </div>
 </template>
 <script>
-import componentsMap from '../../utils/componentsMap'
-import formRender from '../../components/Form/index.vue';
+import componentsMap from "../../utils/componentsMap";
+import formRender from "../../components/Form/index.vue";
 export default {
   name: "VisibleAction",
   components: {
-    formRender
+    formRender,
   },
   data() {
     return {
@@ -35,9 +44,7 @@ export default {
       enterStatus: false,
     };
   },
-  created() {
-    
-  },
+  created() {},
   methods: {
     // 拖拽元素进入
     dragenter(event) {
@@ -55,21 +62,23 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        this.$store.commit('PUSH_FORM_LIST', this.componentsMap[this.$store.state.formItem.type])
-        console.log(this.$store.state)
+        this.$store.commit(
+          "PUSH_FORM_LIST",
+          this.componentsMap[this.$store.state.formItem.type]
+        );
+        console.log(this.$store.state);
       }
     },
-    clear(){
+    clear() {
       this.formItemList = [];
       this.formList = [];
     },
-    configItemInfo(item){
-        this.$store.commit('SET_FORM_ITEM', item)
-    }
+    configItemInfo(item) {
+      this.$store.commit("SET_FORM_ITEM", item);
+      console.log(this.$store.state.formItem)
+    },
   },
-  beforeDestroy() {
-    
-  },
+  beforeDestroy() {},
 };
 </script>
 <style lang="scss" scoped>

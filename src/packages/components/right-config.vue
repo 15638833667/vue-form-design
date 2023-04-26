@@ -5,8 +5,9 @@
         label="组件属性"
         name="field"
         v-if="$store.state.formItem.itemType"
-        >组件属性</el-tab-pane
       >
+        <FormItemConfig></FormItemConfig>
+      </el-tab-pane>
       <el-tab-pane label="表单属性" name="form">
         <FormConfig></FormConfig>
       </el-tab-pane>
@@ -15,10 +16,12 @@
 </template>
 <script>
 import FormConfig from "./form-config.vue";
+import FormItemConfig from "./form-item-config.vue";
 export default {
   name: "RightConfig",
   components: {
     FormConfig,
+    FormItemConfig,
   },
   data() {
     return {
@@ -36,8 +39,7 @@ export default {
       immediate: true,
     },
   },
-  methods: {
-  },
+  methods: {},
   beforeDestroy() {},
 };
 </script>

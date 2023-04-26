@@ -18,12 +18,7 @@ const componentsMap = {
   radio: {
     itemType: "Radio",
     label: "Radio",
-    options: [
-      { label: "北京", value: 1 },
-      { label: "上海", value: 2 },
-      { label: "广州", value: 3 },
-      { label: "松江", value: 4 },
-    ],
+    options: ["北京", "上海", "广州", "松江"],
     prop: "status",
   },
   switch: {
@@ -34,23 +29,13 @@ const componentsMap = {
   checkbox: {
     itemType: "Check",
     label: "CheckBox",
-    options: [
-      { label: "北京", value: 1 },
-      { label: "上海", value: 2 },
-      { label: "广州", value: 3 },
-      { label: "松江", value: 4 },
-    ],
+    options: ["北京", "上海", "广州", "松江"],
     prop: "checkBoxData",
   },
   select: {
     itemType: "Select",
     label: "Address",
-    options: [
-      { label: "北京", value: 1 },
-      { label: "上海", value: 2 },
-      { label: "广州", value: 3 },
-      { label: "松江", value: 4 },
-    ],
+    options: ["北京", "上海", "广州", "松江"],
     prop: "status",
   },
 };

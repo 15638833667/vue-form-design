@@ -5,7 +5,8 @@ const state = {
   formList: [], // 表单元素集合
   formConfig: { // 表单属性配置
     labelWidth: 100,
-    labelStatus: 'col'
+    labelStatus: 'col',
+    bgColor: null
   },
 };
 
