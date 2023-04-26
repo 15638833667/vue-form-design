@@ -1,7 +1,25 @@
 <template>
   <div class="form-render-box">
-    <label class="label">{{ item.label }}</label>
-    <div class="form-field">
+    <label
+      class="label"
+      :style="{
+        width: $store.state.formConfig.labelWidth + 'px',
+        display:
+          $store.state.formConfig.labelStatus === 'row'
+            ? 'block'
+            : 'inline-block',
+      }"
+      >{{ item.label }}</label
+    >
+    <div
+      class="form-field"
+      :style="{
+        width:
+          $store.state.formConfig.labelStatus === 'row'
+            ? '100%'
+            : `calc(100% - ${$store.state.formConfig.labelWidth + 'px'})`,
+      }"
+    >
       <component
         :is="`My${item.itemType}`"
         :item="item"
@@ -51,17 +69,15 @@ export default {
 <style lang="scss" scoped>
 .form-render-box {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-self: flex-start;
+  flex-wrap: wrap;
   border: 1px dashed #ddd;
   padding: 10px;
   border-radius: 3px;
   cursor: pointer;
   .label {
-    width: 120px;
-  }
-  .form-field {
-    width: calc(100% - 120px);
+    line-height: 40px;
   }
 }
 </style>

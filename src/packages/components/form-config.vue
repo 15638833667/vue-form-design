@@ -5,8 +5,8 @@
     </el-form-item>
     <el-form-item label="标签展示模式">
       <el-radio-group v-model="form.labelStatus">
-        <el-radio :label="1">同行</el-radio>
-        <el-radio :label="0">单独一行</el-radio>
+        <el-radio label="col">同行</el-radio>
+        <el-radio label="row">单独一行</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>
@@ -22,7 +22,17 @@ export default {
       },
     };
   },
-  created() {},
+  watch: {
+    form: {
+      handler: function (val){
+        this.$store.commit('SET_FORM_CONFIG', val)
+      },
+      deep: true
+    }
+  },
+  created() {
+    this.form = this.$store.state.formConfig
+  },
   methods: {},
 };
 </script>
