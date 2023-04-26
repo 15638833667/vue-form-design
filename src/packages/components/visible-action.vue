@@ -2,7 +2,7 @@
   <div class="visible-action">
     <div class="action-btns">
       <el-button size="medium">最终展示</el-button>
-      <el-button size="medium">清空</el-button>
+      <el-button size="medium" @click="clear">清空</el-button>
       <el-button size="medium">输出JSON</el-button>
     </div>
     <div
@@ -13,7 +13,7 @@
       @drop="handleDrap"
     >
       <ul class="form-list">
-        <li v-for="(item, index) in formList" :key="item.prop + index">
+        <li v-for="(item, index) in formList" :key="item.prop + index" @click="configItemInfo(item)">
           <formRender :item="item" :formData="formData"></formRender>
         </li>
       </ul>
@@ -68,8 +68,17 @@ export default {
     getDrapItem(item) {
       this.drapItem = item;
     },
+    clear(){
+      this.formItemList = [];
+      this.formList = [];
+    },
+    configItemInfo(item){
+      // 配置表单信息
+      this.$EventBus.$emit('configItem', item)
+    }
   },
   beforeDestroy() {
+    console.log('移除dragItem', Math.random())
     this.$EventBus.$off("dragItem");
   },
 };

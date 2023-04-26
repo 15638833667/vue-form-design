@@ -58,10 +58,10 @@ export default {
   border-radius: 3px;
   cursor: pointer;
   .label {
-    width: 150px;
+    width: 120px;
   }
   .form-field {
-    width: calc(100% - 150px);
+    width: calc(100% - 120px);
   }
 }
 </style>

@@ -21,10 +21,10 @@ export default {
   data() {
     return {
       componentsList: [
-        {
-          type: "button",
-          label: "按钮",
-        },
+        // {
+        //   type: "button",
+        //   label: "按钮",
+        // },
         {
           type: "input",
           label: "输入框",
