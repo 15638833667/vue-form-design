@@ -13,7 +13,7 @@
       @drop="handleDrap"
     >
       <ul class="form-list">
-        <li v-for="(item, index) in formList" :key="item.prop + index" @click="configItemInfo(item)">
+        <li v-for="(item, index) in $store.state.formList" :key="item.prop + index" @click="configItemInfo(item)">
           <formRender :item="item" :formData="formData"></formRender>
         </li>
       </ul>
@@ -32,16 +32,11 @@ export default {
     return {
       componentsMap,
       formData: {},
-      formItemList: [],
-      formList: [],
-      drapItem: {},
       enterStatus: false,
     };
   },
   created() {
-    this.$EventBus.$on("dragItem", (item) => {
-      this.getDrapItem(item);
-    });
+    
   },
   methods: {
     // 拖拽元素进入
@@ -51,7 +46,7 @@ export default {
     },
     // 拖拽元素离开
     dragleave(event) {
-      // event.preventDefault();
+      event.preventDefault();
       if (event.target && event.target.className === "canvas-box") {
         this.enterStatus = false;
       }
@@ -60,26 +55,20 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        this.formItemList.push(this.drapItem);
-        this.formList.push(this.componentsMap[this.drapItem.type]);
-        console.log(this.formList)
+        this.$store.commit('PUSH_FORM_LIST', this.componentsMap[this.$store.state.formItem.type])
+        console.log(this.$store.state)
       }
-    },
-    getDrapItem(item) {
-      this.drapItem = item;
     },
     clear(){
       this.formItemList = [];
       this.formList = [];
     },
     configItemInfo(item){
-      // 配置表单信息
-      this.$EventBus.$emit('configItem', item)
+        this.$store.commit('SET_FORM_ITEM', item)
     }
   },
   beforeDestroy() {
-    console.log('移除dragItem', Math.random())
-    this.$EventBus.$off("dragItem");
+    
   },
 };
 </script>

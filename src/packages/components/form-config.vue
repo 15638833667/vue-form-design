@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       form: {
-        labelWidth: "",
+        labelWidth: 0,
         labelStatus: "",
       },
     };
