@@ -21,7 +21,12 @@
         <li
           v-for="(item, index) in $store.state.formList"
           :key="item.prop + index"
+
           @click="configItemInfo(item)"
+          @dragstart="dragstartItem(index)"
+          @dragenter="dragenterItem($event, index)"
+          @dragover="dragoverItem($event, index)"
+          draggable="true"
         >
           <formRender :item="item" :formData="formData"></formRender>
         </li>
@@ -64,6 +69,11 @@ export default {
       resultShowDialog: {
         show: false,
       },
+      // 源对象的下标
+      dragIndex: '',
+      // 目标对象的下标
+      enterIndex: '',
+      timeout: null,
     };
   },
   created() {},
@@ -84,7 +94,9 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        const fieldItem = {...this.componentsMap[this.$store.state.formItem.type]};
+        const fieldItem = {
+          ...this.componentsMap[this.$store.state.formItem.type],
+        };
 
         this.$set(
           fieldItem,
@@ -94,7 +106,7 @@ export default {
         );
         this.$set(fieldItem, "fieldID", getUUID());
         this.$store.commit("PUSH_FORM_LIST", fieldItem);
-        
+
         this.$store.state.formList.forEach((item) => {
           this.$set(this.formData, item.prop, "");
         });
@@ -120,6 +132,41 @@ export default {
     configItemInfo(item) {
       this.$store.commit("SET_FORM_ITEM", item);
     },
+    // 拖拽排序
+    dragstartItem(index) {
+      console.log("start index ===>>> ", index);
+      this.dragIndex = index;
+    },
+
+    // dragenter 和 dragover 事件的默认行为是拒绝接受任何被拖放的元素。
+    // 因此，我们要在这两个拖放事件中使用`preventDefault`来阻止浏览器的默认行为
+    dragenterItem(e, index) {
+      e.preventDefault();
+      this.enterIndex = index;
+      if (this.timeout !== null) {
+        clearTimeout(this.timeout);
+      }
+      // 拖拽事件的防抖
+      this.timeout = setTimeout(() => {
+        if (this.dragIndex !== index) {
+          this.enterStatus = false;
+          const list = JSON.parse(JSON.stringify(this.$store.state.formList));
+          const source = list[this.dragIndex];
+          
+          // this.$store.commit('SORT_FORM_LIST_ITEM', this.dragIndex, 1);
+          // this.$store.commit('SORT_FORM_LIST_ITEM', index, 0, source);
+          list.splice(this.dragIndex, 1);
+          list.splice(index, 0, source);
+          console.log(list)
+          this.$store.commit('SET_FORM_LIST', list);
+          // 排序变化后目标对象的索引变成源对象的索引
+          this.dragIndex = index;
+        }
+      }, 100);
+    },
+    dragoverItem(e) {
+      e.preventDefault();
+    },
   },
   beforeDestroy() {},
 };
@@ -132,6 +179,7 @@ export default {
     margin-bottom: 14px;
   }
   .canvas-box {
+    overflow: auto;
     width: 100%;
     box-sizing: border-box;
     border: 1px dashed #eee;
