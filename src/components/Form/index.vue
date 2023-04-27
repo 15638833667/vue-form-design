@@ -72,7 +72,6 @@ export default {
   align-items: center;
   justify-self: flex-start;
   flex-wrap: wrap;
-  border: 1px dashed #ddd;
   padding: 10px;
   border-radius: 3px;
   cursor: pointer;

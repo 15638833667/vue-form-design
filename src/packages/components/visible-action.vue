@@ -1,9 +1,9 @@
 <template>
   <div class="visible-action">
     <div class="action-btns">
-      <el-button size="medium">最终展示</el-button>
+      <el-button size="medium" @click="resultShow">最终展示</el-button>
       <el-button size="medium" @click="clear">清空</el-button>
-      <el-button size="medium">输出JSON</el-button>
+      <el-button size="medium" @click="exportJSON">输出JSON</el-button>
     </div>
     <div
       class="canvas-box"
@@ -27,22 +27,43 @@
         </li>
       </ul>
     </div>
+    <ExportJSON
+      :show="exportJSONDialog.show"
+      @close="closeJson"
+      :data="$store.state.formList"
+    ></ExportJSON>
+    <ResultShow
+      v-if="resultShowDialog.show"
+      :show="resultShowDialog.show"
+      @close="closeShow"
+      :data="$store.state.formList"
+    ></ResultShow>
   </div>
 </template>
 <script>
 import componentsMap from "../../utils/componentsMap";
 import formRender from "../../components/Form/index.vue";
+import ExportJSON from "./exportJSON.vue";
+import ResultShow from "./resultShow.vue";
 import { getUUID } from "../../utils/index";
 export default {
   name: "VisibleAction",
   components: {
     formRender,
+    ExportJSON,
+    ResultShow,
   },
   data() {
     return {
       componentsMap,
       formData: {},
       enterStatus: false,
+      exportJSONDialog: {
+        show: false,
+      },
+      resultShowDialog: {
+        show: false,
+      },
     };
   },
   created() {},
@@ -65,7 +86,11 @@ export default {
       if (this.enterStatus) {
         const fieldItem = this.componentsMap[this.$store.state.formItem.type];
 
-        this.$set(fieldItem, "prop", this.$store.state.formItem.type + this.$store.state.formList.length);
+        this.$set(
+          fieldItem,
+          "prop",
+          this.$store.state.formItem.type + (this.$store.state.formList && this.$store.state.formList.length)
+        );
         this.$set(fieldItem, "fieldID", getUUID());
 
         this.$store.commit("PUSH_FORM_LIST", fieldItem);
@@ -74,6 +99,18 @@ export default {
     clear() {
       this.formItemList = [];
       this.formList = [];
+    },
+    exportJSON() {
+      this.exportJSONDialog.show = true;
+    },
+    closeJson() {
+      this.exportJSONDialog.show = false;
+    },
+    resultShow() {
+      this.resultShowDialog.show = true;
+    },
+    closeShow() {
+      this.resultShowDialog.show = false;
     },
     configItemInfo(item) {
       this.$store.commit("SET_FORM_ITEM", item);
@@ -102,6 +139,7 @@ export default {
       margin: 0;
       li {
         margin-bottom: 10px;
+        border: 1px dashed #ddd;
       }
     }
   }
