@@ -84,16 +84,20 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        const fieldItem = this.componentsMap[this.$store.state.formItem.type];
+        const fieldItem = {...this.componentsMap[this.$store.state.formItem.type]};
 
         this.$set(
           fieldItem,
           "prop",
-          this.$store.state.formItem.type + (this.$store.state.formList && this.$store.state.formList.length)
+          this.$store.state.formItem.type +
+            (this.$store.state.formList && this.$store.state.formList.length)
         );
         this.$set(fieldItem, "fieldID", getUUID());
-
         this.$store.commit("PUSH_FORM_LIST", fieldItem);
+        
+        this.$store.state.formList.forEach((item) => {
+          this.$set(this.formData, item.prop, "");
+        });
       }
     },
     clear() {
@@ -107,6 +111,7 @@ export default {
       this.exportJSONDialog.show = false;
     },
     resultShow() {
+      // console.log(this.$store.state.formList);
       this.resultShowDialog.show = true;
     },
     closeShow() {
