@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" label-position="top" :model="form">
     <el-form-item label="标签宽度">
-      <el-slider v-model="form.labelWidth" style="padding: 0 12px" :max="200">
+      <el-slider v-model="form.labelWidth" style="padding: 0 12px" :max="999">
       </el-slider>
     </el-form-item>
     <el-form-item label="标签展示模式">

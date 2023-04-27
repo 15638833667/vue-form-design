@@ -34,6 +34,8 @@ export default {
       handler: function (val) {
         if (val.itemType) {
           this.activeName = "field";
+        } else {
+          this.activeName = "form";
         }
       },
       immediate: true,

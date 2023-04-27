@@ -53,6 +53,7 @@ export default {
     // 组件拖拽开始
     dragStart(event, item) {
       // console.log("dragStart", { event, item });
+      
       this.$store.commit('SET_FORM_ITEM', item)
     },
     // 组件拖拽结束

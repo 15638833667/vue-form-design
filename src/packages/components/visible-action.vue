@@ -32,6 +32,7 @@
 <script>
 import componentsMap from "../../utils/componentsMap";
 import formRender from "../../components/Form/index.vue";
+import { getUUID } from "../../utils/index";
 export default {
   name: "VisibleAction",
   components: {
@@ -62,11 +63,12 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        this.$store.commit(
-          "PUSH_FORM_LIST",
-          this.componentsMap[this.$store.state.formItem.type]
-        );
-        console.log(this.$store.state);
+        const fieldItem = this.componentsMap[this.$store.state.formItem.type];
+
+        this.$set(fieldItem, "prop", this.$store.state.formItem.type + this.$store.state.formList.length);
+        this.$set(fieldItem, "fieldID", getUUID());
+
+        this.$store.commit("PUSH_FORM_LIST", fieldItem);
       }
     },
     clear() {
@@ -75,7 +77,6 @@ export default {
     },
     configItemInfo(item) {
       this.$store.commit("SET_FORM_ITEM", item);
-      console.log(this.$store.state.formItem)
     },
   },
   beforeDestroy() {},
