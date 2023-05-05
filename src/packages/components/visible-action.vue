@@ -148,6 +148,10 @@ export default {
     // 因此，我们要在这两个拖放事件中使用`preventDefault`来阻止浏览器的默认行为
     dragenterItem(e, index) {
       e.preventDefault();
+      
+      if(!this.$store.state.formItem.fieldID){
+        return ;
+      }
       this.enterIndex = index;
       if (this.timeout !== null) {
         clearTimeout(this.timeout);
