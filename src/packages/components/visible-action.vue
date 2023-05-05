@@ -23,7 +23,7 @@
           :key="item.prop + index"
 
           @click="configItemInfo(item)"
-          @dragstart="dragstartItem(index)"
+          @dragstart="dragstartItem(item, index)"
           @dragenter="dragenterItem($event, index)"
           @dragover="dragoverItem($event, index)"
           draggable="true"
@@ -94,22 +94,27 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        const fieldItem = {
-          ...this.componentsMap[this.$store.state.formItem.type],
-        };
-
-        this.$set(
-          fieldItem,
-          "prop",
-          this.$store.state.formItem.type +
-            (this.$store.state.formList && this.$store.state.formList.length)
-        );
-        this.$set(fieldItem, "fieldID", getUUID());
-        this.$store.commit("PUSH_FORM_LIST", fieldItem);
-
-        this.$store.state.formList.forEach((item) => {
-          this.$set(this.formData, item.prop, "");
-        });
+        console.log(this.$store.state.formItem)
+        // 新建元素时执行
+        if(!this.$store.state.formItem.fieldID){
+          const fieldItem = {
+            ...this.componentsMap[this.$store.state.formItem.type],
+          };
+  
+          this.$set(
+            fieldItem,
+            "prop",
+            this.$store.state.formItem.type +
+              (this.$store.state.formList && this.$store.state.formList.length)
+          );
+          this.$set(fieldItem, "fieldID", getUUID());
+  
+          this.$store.commit("PUSH_FORM_LIST", fieldItem);
+  
+          this.$store.state.formList.forEach((item) => {
+            this.$set(this.formData, item.prop, "");
+          });
+        }
       }
     },
     clear() {
@@ -133,7 +138,8 @@ export default {
       this.$store.commit("SET_FORM_ITEM", item);
     },
     // 拖拽排序
-    dragstartItem(index) {
+    dragstartItem(item, index) {
+      this.$store.commit("SET_FORM_ITEM", item);
       console.log("start index ===>>> ", index);
       this.dragIndex = index;
     },
@@ -153,8 +159,6 @@ export default {
           const list = JSON.parse(JSON.stringify(this.$store.state.formList));
           const source = list[this.dragIndex];
           
-          // this.$store.commit('SORT_FORM_LIST_ITEM', this.dragIndex, 1);
-          // this.$store.commit('SORT_FORM_LIST_ITEM', index, 0, source);
           list.splice(this.dragIndex, 1);
           list.splice(index, 0, source);
           console.log(list)
