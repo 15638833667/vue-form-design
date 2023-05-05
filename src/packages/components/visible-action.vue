@@ -21,14 +21,14 @@
         <li
           v-for="(item, index) in $store.state.formList"
           :key="item.prop + index"
-
-          @click="configItemInfo(item)"
           @dragstart="dragstartItem(item, index)"
           @dragenter="dragenterItem($event, index)"
           @dragover="dragoverItem($event, index)"
+          @click="configItemInfo(item)"
           draggable="true"
         >
           <formRender :item="item" :formData="formData"></formRender>
+          <i class="el-icon-delete" @click.stop="deleteItem(item, index)"></i>
         </li>
       </ul>
     </div>
@@ -70,9 +70,9 @@ export default {
         show: false,
       },
       // 源对象的下标
-      dragIndex: '',
+      dragIndex: "",
       // 目标对象的下标
-      enterIndex: '',
+      enterIndex: "",
       timeout: null,
     };
   },
@@ -94,13 +94,13 @@ export default {
     handleDrap(event) {
       event.preventDefault();
       if (this.enterStatus) {
-        console.log(this.$store.state.formItem)
+        console.log(this.$store.state.formItem);
         // 新建元素时执行
-        if(!this.$store.state.formItem.fieldID){
+        if (!this.$store.state.formItem.fieldID) {
           const fieldItem = {
             ...this.componentsMap[this.$store.state.formItem.type],
           };
-  
+
           this.$set(
             fieldItem,
             "prop",
@@ -108,9 +108,9 @@ export default {
               (this.$store.state.formList && this.$store.state.formList.length)
           );
           this.$set(fieldItem, "fieldID", getUUID());
-  
+
           this.$store.commit("PUSH_FORM_LIST", fieldItem);
-  
+
           this.$store.state.formList.forEach((item) => {
             this.$set(this.formData, item.prop, "");
           });
@@ -137,6 +137,11 @@ export default {
     configItemInfo(item) {
       this.$store.commit("SET_FORM_ITEM", item);
     },
+    deleteItem(item, index) {
+      const list = JSON.parse(JSON.stringify(this.$store.state.formList));
+      list.splice(index, 1);
+      this.$store.commit("SET_FORM_LIST", list);
+    },
     // 拖拽排序
     dragstartItem(item, index) {
       this.$store.commit("SET_FORM_ITEM", item);
@@ -148,9 +153,9 @@ export default {
     // 因此，我们要在这两个拖放事件中使用`preventDefault`来阻止浏览器的默认行为
     dragenterItem(e, index) {
       e.preventDefault();
-      
-      if(!this.$store.state.formItem.fieldID){
-        return ;
+
+      if (!this.$store.state.formItem.fieldID) {
+        return;
       }
       this.enterIndex = index;
       if (this.timeout !== null) {
@@ -162,11 +167,11 @@ export default {
           this.enterStatus = false;
           const list = JSON.parse(JSON.stringify(this.$store.state.formList));
           const source = list[this.dragIndex];
-          
+
           list.splice(this.dragIndex, 1);
           list.splice(index, 0, source);
-          console.log(list)
-          this.$store.commit('SET_FORM_LIST', list);
+          console.log(list);
+          this.$store.commit("SET_FORM_LIST", list);
           // 排序变化后目标对象的索引变成源对象的索引
           this.dragIndex = index;
         }
@@ -201,6 +206,17 @@ export default {
       li {
         margin-bottom: 10px;
         border: 1px dashed #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .form-render-box {
+          box-sizing: border-box;
+          width: calc(100% - 25px);
+        }
+        .el-icon-delete {
+          padding-right: 5px;
+          cursor: pointer;
+        }
       }
     }
   }
